@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Dagger</title>
+    <script>
+      function getURLParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+      }
+    </script>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
@@ -24,6 +32,7 @@
         document.body.style.textAlign = "left";
       }
       
+      
       var unityInstance = createUnityInstance(canvas, {
         dataUrl: "Build/build5_userId.data",
         frameworkUrl: "Build/build5_userId.framework.js",
@@ -43,11 +52,4 @@
   </body>
 </html>
 
-<script>
-  function getURLParameter(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-  }
-</script>
+
