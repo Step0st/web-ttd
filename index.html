@@ -7,7 +7,7 @@
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-    <script src="Build/hizzycoin_webgl.loader.js"></script>
+    <script src="Build/hizzycoin_webgl2_clearing.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -25,9 +25,9 @@
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/hizzycoin_webgl.data",
-        frameworkUrl: "Build/hizzycoin_webgl.framework.js",
-        codeUrl: "Build/hizzycoin_webgl.wasm",
+        dataUrl: "Build/hizzycoin_webgl2_clearing.data",
+        frameworkUrl: "Build/hizzycoin_webgl2_clearing.framework.js",
+        codeUrl: "Build/hizzycoin_webgl2_clearing.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "hizzycoin",
         productName: "hizzycoinapp",
