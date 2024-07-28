@@ -21,9 +21,19 @@
       background: url('hizzycoin.png') no-repeat center center; /* Укажите ваше изображение логотипа */
       background-size: contain;
       position: absolute; /* Абсолютное позиционирование */
-      top: 40%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%); /* Центрирование логотипа */
+      animation: pulse 2s infinite ease-in-out; /* Анимация pulse будет повторяться бесконечно */
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1); /* Начальное и конечное состояние: логотип в нормальном размере */
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1); /* В середине анимации логотип увеличивается на 10% */
+      }
     }
     #unity-canvas {
       background: #231F20;
@@ -42,7 +52,7 @@
     #loading-bar {
       height: 100%;
       background: url('pb_full.png') no-repeat center center; /* Фон заполненного бара */
-      background-size: cover;
+      background-size: 100% 100%;
       width: 0%; /* Начальная ширина заполненного бара */
     }
   </style>
