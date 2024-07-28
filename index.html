@@ -39,29 +39,9 @@
       background: #231F20;
       visibility: hidden; 
     }
-    #loading-bar-container {
-      position: absolute;
-      top: 70%; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 260px; 
-      height: 35px; 
-      background: url('pb_empty.png') no-repeat center center;
-      background-size: cover;
-    }
-    #loading-bar {
-      width: 260px;
-      height: 35px;
-      background: url('pb_full.png') no-repeat left center; 
-      background-size: cover;
-      clip-path: inset(0 100% 0 0);
-    }
+
   </style>
 </head>
-<div id="loading-logo"></div>
-<div id="loading-bar-container">
-  <div id="loading-bar"></div>
-</div>
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
 <script src="Build/hc.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -100,10 +80,6 @@
           companyName: "hizzycoin",
           productName: "hizzycoinapp",
           productVersion: "0.1",
-        }, (progress) => {
-          var loadingBar = document.getElementById('loading-bar');
-          var percentLoaded = (100 - (progress * 100)).toFixed(2); // Вычисляем оставшийся процент
-          loadingBar.style.clipPath = `inset(0 ${percentLoaded}% 0 0)`; // Обновление ширины заполненного бара
         }).then(function(instance) {
           unityInstance = instance;
           if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
