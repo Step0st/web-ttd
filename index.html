@@ -4,48 +4,82 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | hizzycoinapp</title>
+  <style>
+    body {
+      text-align: center;
+      padding: 0;
+      margin: 0;
+      background: #000; /* Черный фон для контраста */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Полная высота видимой части экрана */
+    }
+    #loading-logo {
+      width: 300px; /* Размер вашего логотипа */
+      height: 300px;
+      background: url('hizzycoin.png') no-repeat center center; /* Укажите ваше изображение логотипа */
+      background-size: contain;
+      position: absolute; /* Абсолютное позиционирование */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Центрирование логотипа */
+    }
+    #unity-canvas {
+      width: 560px;
+      height: 1220px;
+      background: #231F20;
+      visibility: hidden; /* Скрыть канвас до загрузки */
+    }
+  </style>
 </head>
-<body>
-<div id="unity-container">
-  <canvas id="unity-canvas" width="560" height="1220"></canvas>
-  <div id="unity-loading-bar">
-    <div id="unity-progress-bar-empty">
-      <div id="unity-progress-bar-full"></div>
-    </div>
-  </div>
-</div>
+<body style="text-align: center; padding: 0; border: 0; margin: 0;">
+<canvas id="unity-canvas" width="560" height="1220"></canvas>
 <script src="Build/test4_add_loading_screen.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    var canvas = document.getElementById('unity-canvas');
-    var progressBarFull = document.getElementById('unity-progress-bar-full');
-
+    let canvas = document.querySelector("#unity-canvas");
+    
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      document.body.style.textAlign = 'left'; // Выравнивание текста для мобильных устройств
+    }
+    
     if (typeof Telegram !== 'undefined') {
       Telegram.WebApp.ready();
-      var userData = Telegram.WebApp.initDataUnsafe.user;
-      var startParam = Telegram.WebApp.initDataUnsafe.start_param;
-      var refId = startParam ? startParam : "";
 
-      var unityInstance = createUnityInstance(canvas, {
-        dataUrl: "Build/test4_add_loading_screen.data",
-        frameworkUrl: "Build/test4_add_loading_screen.framework.js",
-        codeUrl: "Build/test4_add_loading_screen.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "hizzycoin",
-        productName: "hizzycoinapp",
-        productVersion: "0.1",
-      }, (progress) => {
-        progressBarFull.style.width = (100 * progress) + "%";
-      }).then(function(instance) {
-        unityInstance = instance;
-        unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);
-        unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
-        unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
-        document.getElementById('unity-loading-bar').style.display = 'none';
-      }).catch(function(message) {
-        alert('Unity load error: ' + message);
-      });
+      if (Telegram.WebApp.initDataUnsafe) {
+        const userData = Telegram.WebApp.initDataUnsafe.user;
+        const startParam = Telegram.WebApp.initDataUnsafe.start_param;
+        var refId = startParam ? startParam : "";
+        
+        var unityInstance = createUnityInstance(canvas, {
+          dataUrl: "Build/test4_add_loading_screen.data",
+          frameworkUrl: "Build/test4_add_loading_screen.framework.js",
+          codeUrl: "Build/test4_add_loading_screen.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "hizzycoin",
+          productName: "hizzycoinapp",
+          productVersion: "0.1",
+        }).then(function(instance) {
+          unityInstance = instance;
+          if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
+          unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
+          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
+          document.getElementById('loading-logo').style.display = 'none'; // Скрыть логотип после загрузки
+          canvas.style.visibility = 'visible';
+        }).catch(function(error) {
+          console.error("Unity load error: ", error);
+        });
+      } else {
+        console.log("Telegram WebApp data is not available.");
+      }
+    } else {
+      console.log("Telegram WebApp is not defined.");
     }
   });
 </script>
