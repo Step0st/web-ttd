@@ -9,52 +9,52 @@
       text-align: center;
       padding: 0;
       margin: 0;
-      background: #000; /* Черный фон для контраста */
+      background: #000; 
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh; /* Полная высота видимой части экрана */
+      height: 100vh; 
     }
     #loading-logo {
-      width: 200px; /* Размер вашего логотипа */
+      width: 200px; 
       height: 200px;
-      background: url('hizzycoin.png') no-repeat center center; /* Укажите ваше изображение логотипа */
+      background: url('hizzycoin.png') no-repeat center center; 
       background-size: contain;
-      position: absolute; /* Абсолютное позиционирование */
+      position: absolute; 
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%); /* Центрирование логотипа */
-      animation: pulse 2s infinite ease-in-out; /* Анимация pulse будет повторяться бесконечно */
+      transform: translate(-50%, -50%);
+      animation: pulse 2s infinite ease-in-out; 
     }
 
     @keyframes pulse {
       0%, 100% {
-        transform: translate(-50%, -50%) scale(1); /* Начальное и конечное состояние: логотип в нормальном размере */
+        transform: translate(-50%, -50%) scale(1); 
       }
       50% {
-        transform: translate(-50%, -50%) scale(1.1); /* В середине анимации логотип увеличивается на 10% */
+        transform: translate(-50%, -50%) scale(1.1);
       }
     }
     #unity-canvas {
       background: #231F20;
-      visibility: hidden; /* Скрыть канвас до загрузки */
+      visibility: hidden; 
     }
     #loading-bar-container {
       position: absolute;
-      top: 70%; /* Расположение под логотипом */
+      top: 70%; 
       left: 50%;
       transform: translateX(-50%);
-      width: 250px; /* Ширина контейнера бара */
-      height: 30px; /* Высота контейнера бара */
-      background: url('pb_empty.png') no-repeat center center; /* Фон пустого бара */
+      width: 250px; 
+      height: 30px; 
+      background: url('pb_empty.png') no-repeat center center;
       background-size: cover;
     }
     #loading-bar {
-      width: 250px; /* Ширина контейнера бара */
+      width: 250px;
       height: 30px;
-      background: url('pb_full.png') no-repeat left center; /* Расположение фона от левого края */
+      background: url('pb_full.png') no-repeat left center; 
       background-size: cover;
-      clip-path: inset(0 100% 0 0); /* Изначально спрятать весь заполненный спрайт */
+      clip-path: inset(0 100% 0 0);
     }
   </style>
 </head>
@@ -63,7 +63,7 @@
   <div id="loading-bar"></div>
 </div>
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-<script src="Build/test4_add_loading_screen.loader.js"></script>
+<script src="Build/hc.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -83,7 +83,7 @@
       canvas.style.width = "100%";
       canvas.style.height = "100%";
     }
-    
+
     if (typeof Telegram !== 'undefined') {
       Telegram.WebApp.ready();
 
@@ -91,11 +91,11 @@
         const userData = Telegram.WebApp.initDataUnsafe.user;
         const startParam = Telegram.WebApp.initDataUnsafe.start_param;
         var refId = startParam ? startParam : "";
-        
+
         var unityInstance = createUnityInstance(canvas, {
-          dataUrl: "Build/test4_add_loading_screen.data",
-          frameworkUrl: "Build/test4_add_loading_screen.framework.js",
-          codeUrl: "Build/test4_add_loading_screen.wasm",
+          dataUrl: "Build/hc.data",
+          frameworkUrl: "Build/hc.framework.js",
+          codeUrl: "Build/hc.wasm",
           streamingAssetsUrl: "StreamingAssets",
           companyName: "hizzycoin",
           productName: "hizzycoinapp",
@@ -125,3 +125,4 @@
 </script>
 </body>
 </html>
+
