@@ -50,10 +50,11 @@
       background-size: cover;
     }
     #loading-bar {
-      height: 100%;
-      background: url('pb_full.png') no-repeat center center; /* Фон заполненного бара */
-      background-size: 100% 100%;
-      width: 0%; /* Начальная ширина заполненного бара */
+      width: 250px; /* Ширина контейнера бара */
+      height: 30px;
+      background: url('pb_full.png') no-repeat left center; /* Расположение фона от левого края */
+      background-size: cover;
+      clip-path: inset(0 100% 0 0); /* Изначально спрятать весь заполненный спрайт */
     }
   </style>
 </head>
@@ -101,7 +102,8 @@
           productVersion: "0.1",
         }, (progress) => {
           var loadingBar = document.getElementById('loading-bar');
-          loadingBar.style.width = (progress * 100) + '%'; // Обновление ширины заполненного бара
+          var percentLoaded = (100 - (progress * 100)).toFixed(2); // Вычисляем оставшийся процент
+          loadingBar.style.clipPath = `inset(0 ${percentLoaded}% 0 0)`; // Обновление ширины заполненного бара
         }).then(function(instance) {
           unityInstance = instance;
           if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
