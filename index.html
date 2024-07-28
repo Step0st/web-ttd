@@ -5,64 +5,49 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Unity WebGL Player | hizzycoinapp</title>
 </head>
-<body style="text-align: center; padding: 0; border: 0; margin: 0;">
-<canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-<script src="Build/test2_webGL_3compressions.loader.js"></script>
+<body>
+<div id="unity-container">
+  <canvas id="unity-canvas" width="560" height="1220"></canvas>
+  <div id="unity-loading-bar">
+    <div id="unity-progress-bar-empty">
+      <div id="unity-progress-bar-full"></div>
+    </div>
+  </div>
+</div>
+<script src="Build/test4_add_loading_screen.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    var canvas = document.getElementById('unity-canvas');
+    var progressBarFull = document.getElementById('unity-progress-bar-full');
+
     if (typeof Telegram !== 'undefined') {
       Telegram.WebApp.ready();
+      var userData = Telegram.WebApp.initDataUnsafe.user;
+      var startParam = Telegram.WebApp.initDataUnsafe.start_param;
+      var refId = startParam ? startParam : "";
 
-      if (Telegram.WebApp.initDataUnsafe) {
-        const userData = Telegram.WebApp.initDataUnsafe.user;
-        const startParam = Telegram.WebApp.initDataUnsafe.start_param;
-        var refId = startParam ? startParam : "";
-        let canvas;
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-
-          var meta = document.createElement('meta');
-          meta.name = 'viewport';
-          meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-          document.getElementsByTagName('head')[0].appendChild(meta);
-
-          canvas = document.querySelector("#unity-canvas");
-          canvas.style.width = "100%";
-          canvas.style.height = "100%";
-          canvas.style.position = "fixed";
-
-          document.body.style.textAlign = "left";
-        } else {
-          canvas = document.querySelector("#unity-canvas");
-          canvas.style.width = "100%";
-          canvas.style.height = "100%";
-        }
-
-        var unityInstance = createUnityInstance(canvas, {
-          dataUrl: "Build/test2_webGL_3compressions.data",
-          frameworkUrl: "Build/test2_webGL_3compressions.framework.js",
-          codeUrl: "Build/test2_webGL_3compressions.wasm",
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "hizzycoin",
-          productName: "hizzycoinapp",
-          productVersion: "0.1",
-        }).then(function(instance) {
-          unityInstance = instance;
-          if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);
-          }
-          unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
-          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
-        }).catch(function(error) {
-          console.error("Unity load error: ", error);
-        });
-      } else {
-        console.log("Telegram WebApp data is not available.");
-      }
-    } else {
-      console.log("Telegram WebApp is not defined.");
+      var unityInstance = createUnityInstance(canvas, {
+        dataUrl: "Build/test4_add_loading_screen.data",
+        frameworkUrl: "Build/test4_add_loading_screen.framework.js",
+        codeUrl: "Build/test4_add_loading_screen.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "hizzycoin",
+        productName: "hizzycoinapp",
+        productVersion: "0.1",
+      }, (progress) => {
+        progressBarFull.style.width = (100 * progress) + "%";
+      }).then(function(instance) {
+        unityInstance = instance;
+        unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);
+        unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
+        unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
+        document.getElementById('unity-loading-bar').style.display = 'none';
+      }).catch(function(message) {
+        alert('Unity load error: ' + message);
+      });
     }
   });
 </script>
 </body>
 </html>
-
