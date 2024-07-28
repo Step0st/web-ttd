@@ -16,8 +16,8 @@
       height: 100vh; /* Полная высота видимой части экрана */
     }
     #loading-logo {
-      width: 300px; /* Размер вашего логотипа */
-      height: 300px;
+      width: 200px; /* Размер вашего логотипа */
+      height: 200px;
       background: url('hizzycoin.png') no-repeat center center; /* Укажите ваше изображение логотипа */
       background-size: contain;
       position: absolute; /* Абсолютное позиционирование */
@@ -29,9 +29,28 @@
       background: #231F20;
       visibility: hidden; /* Скрыть канвас до загрузки */
     }
+    #loading-bar-container {
+      position: absolute;
+      top: 60%; /* Расположение под логотипом */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px; /* Ширина контейнера бара */
+      height: 50px; /* Высота контейнера бара */
+      background: url('pb_empty.png') no-repeat center center; /* Фон пустого бара */
+      background-size: cover;
+    }
+    #loading-bar {
+      height: 100%;
+      background: url('pb_full.png') no-repeat center center; /* Фон заполненного бара */
+      background-size: cover;
+      width: 0%; /* Начальная ширина заполненного бара */
+    }
   </style>
 </head>
 <div id="loading-logo"></div>
+<div id="loading-bar-container">
+  <div id="loading-bar"></div>
+</div>
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
 <script src="Build/test4_add_loading_screen.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -70,12 +89,16 @@
           companyName: "hizzycoin",
           productName: "hizzycoinapp",
           productVersion: "0.1",
+        }, (progress) => {
+          var loadingBar = document.getElementById('loading-bar');
+          loadingBar.style.width = (progress * 100) + '%'; // Обновление ширины заполненного бара
         }).then(function(instance) {
           unityInstance = instance;
           if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
           unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
           unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
           document.getElementById('loading-logo').style.display = 'none'; // Скрыть логотип после загрузки
+          document.getElementById('loading-bar-container').style.display = 'none';
           canvas.style.visibility = 'visible';
         }).catch(function(error) {
           console.error("Unity load error: ", error);
