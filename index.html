@@ -86,8 +86,7 @@
           if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
           unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
           unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
-          document.getElementById('loading-logo').style.display = 'none'; // Скрыть логотип после загрузки
-          document.getElementById('loading-bar-container').style.display = 'none';
+          document.getElementById('loading-logo').style.display = 'none';
           canvas.style.visibility = 'visible';
         }).catch(function(error) {
           console.error("Unity load error: ", error);
