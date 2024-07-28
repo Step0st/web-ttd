@@ -7,7 +7,7 @@
 </head>
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-<script src="Build/test1_default.loader.js"></script>
+<script src="Build/test2_webGL_3compressions.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -39,9 +39,9 @@
         }
 
         var unityInstance = createUnityInstance(canvas, {
-          dataUrl: "Build/test1_default.data",
-          frameworkUrl: "Build/test1_default.framework.js",
-          codeUrl: "Build/test1_default.wasm",
+          dataUrl: "Build/test2_webGL_3compressions.data",
+          frameworkUrl: "Build/test2_webGL_3compressions.framework.js",
+          codeUrl: "Build/test2_webGL_3compressions.wasm",
           streamingAssetsUrl: "StreamingAssets",
           companyName: "hizzycoin",
           productName: "hizzycoinapp",
@@ -65,3 +65,4 @@
 </script>
 </body>
 </html>
+
