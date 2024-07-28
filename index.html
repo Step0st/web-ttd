@@ -1,40 +1,72 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | hizzycoinapp</title>
-  </head>
-  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-    <script src="Build/hizzycoin_webgl4_Tg_API2.loader.js"></script>
-    <script>
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | hizzycoinapp</title>
+</head>
+<body style="text-align: center; padding: 0; border: 0; margin: 0;">
+<canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
+<script src="Build/hizzycoin_webgl4_Tg_API2.loader.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (typeof Telegram !== 'undefined') {
+      Telegram.WebApp.ready();
 
-        var canvas = document.querySelector("#unity-canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.style.position = "fixed";
+      if (Telegram.WebApp.initDataUnsafe) {
+        const userData = Telegram.WebApp.initDataUnsafe.user;
+        const startParam = Telegram.WebApp.initDataUnsafe.start_param;
+        var refId = startParam ? startParam : "";
+        let canvas;
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
 
-        document.body.style.textAlign = "left";
+          var meta = document.createElement('meta');
+          meta.name = 'viewport';
+          meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+          document.getElementsByTagName('head')[0].appendChild(meta);
+
+          canvas = document.querySelector("#unity-canvas");
+          canvas.style.width = "100%";
+          canvas.style.height = "100%";
+          canvas.style.position = "fixed";
+
+          document.body.style.textAlign = "left";
+        } else {
+          canvas = document.querySelector("#unity-canvas");
+          canvas.style.width = "100%";
+          canvas.style.height = "100%";
+        }
+
+        var unityInstance = createUnityInstance(canvas, {
+          dataUrl: "Build/hizzycoin_webgl4_Tg_API2.data",
+          frameworkUrl: "Build/hizzycoin_webgl4_Tg_API2.framework.js",
+          codeUrl: "Build/hizzycoin_webgl4_Tg_API2.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "hizzycoin",
+          productName: "hizzycoinapp",
+          productVersion: "0.1",
+        }).then(function(instance) {
+          unityInstance = instance;
+          if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);
+          }
+          unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
+          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
+        }).catch(function(error) {
+          console.error("Unity load error: ", error);
+        });
+      } else {
+        console.log("Telegram WebApp data is not available.");
       }
-
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/hizzycoin_webgl4_Tg_API2.data",
-        frameworkUrl: "Build/hizzycoin_webgl4_Tg_API2.framework.js",
-        codeUrl: "Build/hizzycoin_webgl4_Tg_API2.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "hizzycoin",
-        productName: "hizzycoinapp",
-        productVersion: "0.1",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      });
-    </script>
-  </body>
+    } else {
+      console.log("Telegram WebApp is not defined.");
+    }
+  });
+</script>
+</body>
 </html>
+
+
+
+
+
