@@ -26,27 +26,32 @@
       transform: translate(-50%, -50%); /* Центрирование логотипа */
     }
     #unity-canvas {
-      width: 560px;
-      height: 1220px;
       background: #231F20;
       visibility: hidden; /* Скрыть канвас до загрузки */
     }
   </style>
 </head>
 <div id="loading-logo"></div>
-<canvas id="unity-canvas" width="560" height="1220"></canvas>
+<canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
 <script src="Build/test4_add_loading_screen.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     let canvas = document.querySelector("#unity-canvas");
-    
+
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       var meta = document.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
       document.getElementsByTagName('head')[0].appendChild(meta);
       document.body.style.textAlign = 'left'; // Выравнивание текста для мобильных устройств
+
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.position = "fixed";
+    } else {
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
     }
     
     if (typeof Telegram !== 'undefined') {
