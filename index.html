@@ -71,6 +71,7 @@
       if (Telegram.WebApp.initDataUnsafe) {
         const userData = Telegram.WebApp.initDataUnsafe.user;
         const startParam = Telegram.WebApp.initDataUnsafe.start_param;
+        
         var refId = startParam ? startParam : "";
 
         var unityInstance = createUnityInstance(canvas, {
@@ -85,7 +86,9 @@
           unityInstance = instance;
           if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
           unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
-          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username);
+          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username || "");
+          unityInstance.SendMessage("AppInitializer", "ReceiveUserFirstName", userData.first_name || "");
+          unityInstance.SendMessage("AppInitializer", "ReceiveUserSecondName", userData.last_name || "");
           document.getElementById('loading-logo').style.display = 'none';
           canvas.style.visibility = 'visible';
         }).catch(function(error) {
