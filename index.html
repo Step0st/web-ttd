@@ -40,10 +40,32 @@
       visibility: hidden; 
     }
 
+    #desktop-content {
+      font-size: 24px;
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      text-align: center;
+    }
+    #qr-code {
+      margin-top: 20px;
+      width: 200px; 
+      height: 200px; 
+      background: url('qr.png') no-repeat center center;
+      background-size: cover;
+    }
+
   </style>
 </head>
 <div id="loading-logo"></div>
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
+<div id="desktop-content">
+  <p>Play the game on your phone and hit them all</p>
+  <div id="qr-code"></div>
+</div>
 <script src="Build/hc.loader.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
@@ -61,8 +83,8 @@
       canvas.style.height = "100%";
       canvas.style.position = "fixed";
     } else {
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
+      canvas.style.display = 'none';
+      desktopContent.style.display = 'block';
     }
 
     if (typeof Telegram !== 'undefined') {
