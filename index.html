@@ -71,56 +71,57 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     let canvas = document.querySelector("#unity-canvas");
+    let desktopContent = document.getElementById('desktop-content');
 
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       var meta = document.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
       document.getElementsByTagName('head')[0].appendChild(meta);
-      document.body.style.textAlign = 'left'; // Выравнивание текста для мобильных устройств
+      document.body.style.textAlign = 'left';
 
       canvas.style.width = "100%";
       canvas.style.height = "100%";
       canvas.style.position = "fixed";
+
+      if (typeof Telegram !== 'undefined') {
+        Telegram.WebApp.ready();
+
+        if (Telegram.WebApp.initDataUnsafe) {
+          const userData = Telegram.WebApp.initDataUnsafe.user;
+          const startParam = Telegram.WebApp.initDataUnsafe.start_param;
+
+          var refId = startParam ? startParam : "";
+
+          var unityInstance = createUnityInstance(canvas, {
+            dataUrl: "Build/hc.data",
+            frameworkUrl: "Build/hc.framework.js",
+            codeUrl: "Build/hc.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "hizzycoin",
+            productName: "hizzycoinapp",
+            productVersion: "0.1",
+          }).then(function(instance) {
+            unityInstance = instance;
+            if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId); }
+            unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
+            unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username || "");
+            unityInstance.SendMessage("AppInitializer", "ReceiveUserFirstName", userData.first_name || "");
+            unityInstance.SendMessage("AppInitializer", "ReceiveUserSecondName", userData.last_name || "");
+            document.getElementById('loading-logo').style.display = 'none';
+            canvas.style.visibility = 'visible';
+          }).catch(function(error) {
+            console.error("Unity load error: ", error);
+          });
+        } else {
+          console.log("Telegram WebApp data is not available.");
+        }
+      } else {
+        console.log("Telegram WebApp is not defined.");
+      }
     } else {
       canvas.style.display = 'none';
       desktopContent.style.display = 'block';
-    }
-
-    if (typeof Telegram !== 'undefined') {
-      Telegram.WebApp.ready();
-
-      if (Telegram.WebApp.initDataUnsafe) {
-        const userData = Telegram.WebApp.initDataUnsafe.user;
-        const startParam = Telegram.WebApp.initDataUnsafe.start_param;
-        
-        var refId = startParam ? startParam : "";
-
-        var unityInstance = createUnityInstance(canvas, {
-          dataUrl: "Build/hc.data",
-          frameworkUrl: "Build/hc.framework.js",
-          codeUrl: "Build/hc.wasm",
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "hizzycoin",
-          productName: "hizzycoinapp",
-          productVersion: "0.1",
-        }).then(function(instance) {
-          unityInstance = instance;
-          if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId);}
-          unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
-          unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username || "");
-          unityInstance.SendMessage("AppInitializer", "ReceiveUserFirstName", userData.first_name || "");
-          unityInstance.SendMessage("AppInitializer", "ReceiveUserSecondName", userData.last_name || "");
-          document.getElementById('loading-logo').style.display = 'none';
-          canvas.style.visibility = 'visible';
-        }).catch(function(error) {
-          console.error("Unity load error: ", error);
-        });
-      } else {
-        console.log("Telegram WebApp data is not available.");
-      }
-    } else {
-      console.log("Telegram WebApp is not defined.");
     }
   });
 </script>
