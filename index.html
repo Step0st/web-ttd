@@ -9,27 +9,27 @@
       text-align: center;
       padding: 0;
       margin: 0;
-      background: #000; 
+      background: #000;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh; 
+      height: 100vh;
     }
     #loading-logo {
-      width: 200px; 
+      width: 200px;
       height: 200px;
-      background: url('hizzycoin.png') no-repeat center center; 
+      background: url('hizzycoin.png') no-repeat center center;
       background-size: contain;
-      position: absolute; 
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: pulse 2s infinite ease-in-out; 
+      animation: pulse 2s infinite ease-in-out;
     }
 
     @keyframes pulse {
       0%, 100% {
-        transform: translate(-50%, -50%) scale(1); 
+        transform: translate(-50%, -50%) scale(1);
       }
       50% {
         transform: translate(-50%, -50%) scale(1.1);
@@ -37,10 +37,12 @@
     }
     #unity-canvas {
       background: #231F20;
-      visibility: hidden; 
+      visibility: hidden;
     }
 
     #desktop-content {
+      width: 350px;
+      height: 350px;
       font-size: 24px;
       display: none;
       position: absolute;
@@ -52,8 +54,8 @@
     }
     #qr-code {
       margin-top: 20px;
-      width: 200px; 
-      height: 200px; 
+      width: 200px;
+      height: 200px;
       background: url('qr.png') no-repeat center center;
       background-size: cover;
     }
@@ -63,7 +65,7 @@
 <div id="loading-logo"></div>
 <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
 <div id="desktop-content">
-  <p>Play the game on your phone and hit them all</p>
+  <p>Play the game on your phone</p>
   <div id="qr-code"></div>
 </div>
 <script src="Build/hc.loader.js"></script>
@@ -72,6 +74,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     let canvas = document.querySelector("#unity-canvas");
     let desktopContent = document.getElementById('desktop-content');
+    let logo = document.getElementById('loading-logo');
 
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       var meta = document.createElement('meta');
@@ -108,7 +111,7 @@
             unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username || "");
             unityInstance.SendMessage("AppInitializer", "ReceiveUserFirstName", userData.first_name || "");
             unityInstance.SendMessage("AppInitializer", "ReceiveUserSecondName", userData.last_name || "");
-            document.getElementById('loading-logo').style.display = 'none';
+            logo.style.display = 'none';
             canvas.style.visibility = 'visible';
           }).catch(function(error) {
             console.error("Unity load error: ", error);
@@ -120,6 +123,7 @@
         console.log("Telegram WebApp is not defined.");
       }
     } else {
+      logo.style.display = 'none';
       canvas.style.display = 'none';
       desktopContent.style.display = 'block';
     }
