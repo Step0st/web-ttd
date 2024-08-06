@@ -1,135 +1,40 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity WebGL Player | hizzycoinapp</title>
-  <style>
-    body {
-      text-align: center;
-      padding: 0;
-      margin: 0;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #loading-logo {
-      width: 200px;
-      height: 200px;
-      background: url('hizzycoin.png') no-repeat center center;
-      background-size: contain;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: pulse 2s infinite ease-in-out;
-    }
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | hizzycoinapp</title>
+  </head>
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
+    <script src="Build/hc.loader.js"></script>
+    <script>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
 
-    @keyframes pulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
+        var canvas = document.querySelector("#unity-canvas");
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.position = "fixed";
+
+        document.body.style.textAlign = "left";
       }
-      50% {
-        transform: translate(-50%, -50%) scale(1.1);
-      }
-    }
-    #unity-canvas {
-      background: #231F20;
-      visibility: hidden;
-    }
 
-    #desktop-content {
-      width: 350px;
-      height: 350px;
-      font-size: 24px;
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      text-align: center;
-    }
-    #qr-code {
-      margin-top: 20px;
-      margin-left: 80px;
-      width: 200px;
-      height: 200px;
-      background: url('qr.png') no-repeat center center;
-      background-size: cover;
-    }
-
-  </style>
-</head>
-<div id="loading-logo"></div>
-<canvas id="unity-canvas" width=560 height=1220 style="width: 560px; height: 1220px; background: #231F20"></canvas>
-<div id="desktop-content">
-  <p>Play HizzyCoin on your phone</p>
-  <div id="qr-code"></div>
-</div>
-<script src="Build/hc.loader.js"></script>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    let canvas = document.querySelector("#unity-canvas");
-    let desktopContent = document.getElementById('desktop-content');
-    let logo = document.getElementById('loading-logo');
-
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      var meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
-      document.body.style.textAlign = 'left';
-
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.position = "fixed";
-
-      if (typeof Telegram !== 'undefined') {
-        Telegram.WebApp.ready();
-
-        if (Telegram.WebApp.initDataUnsafe) {
-          const userData = Telegram.WebApp.initDataUnsafe.user;
-          const startParam = Telegram.WebApp.initDataUnsafe.start_param;
-
-          var refId = startParam ? startParam : "";
-
-          var unityInstance = createUnityInstance(canvas, {
-            dataUrl: "Build/hc.data",
-            frameworkUrl: "Build/hc.framework.js",
-            codeUrl: "Build/hc.wasm",
-            streamingAssetsUrl: "StreamingAssets",
-            companyName: "hizzycoin",
-            productName: "hizzycoinapp",
-            productVersion: "0.1",
-          }).then(function(instance) {
-            unityInstance = instance;
-            if (refId) { unityInstance.SendMessage("AppInitializer", "ReceiveReferral", refId); }
-            unityInstance.SendMessage("AppInitializer", "ReceiveUserID", userData.id.toString());
-            unityInstance.SendMessage("AppInitializer", "ReceiveUsername", userData.username || "");
-            unityInstance.SendMessage("AppInitializer", "ReceiveUserFirstName", userData.first_name || "");
-            unityInstance.SendMessage("AppInitializer", "ReceiveUserSecondName", userData.last_name || "");
-            logo.style.display = 'none';
-            canvas.style.visibility = 'visible';
-          }).catch(function(error) {
-            console.error("Unity load error: ", error);
-          });
-        } else {
-          console.log("Telegram WebApp data is not available.");
-        }
-      } else {
-        console.log("Telegram WebApp is not defined.");
-      }
-    } else {
-      logo.style.display = 'none';
-      canvas.style.display = 'none';
-      desktopContent.style.display = 'block';
-    }
-  });
-</script>
-</body>
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/hc.data",
+        frameworkUrl: "Build/hc.framework.js",
+        codeUrl: "Build/hc.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "hizzycoin",
+        productName: "hizzycoinapp",
+        productVersion: "0.5.2",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
 </html>
-
